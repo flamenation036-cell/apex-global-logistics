@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Apex Global Logistics Login</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <img
+            src="logo.png"
+            alt="Logo"
+            class="logo"
+        >
+
+        <h1>Apex Global Logistics</h1>
+
+        <p class="subtitle">
+            International Courier & Logistics Services
+        </p>
+
+
+
+        <input
+            type="email"
+            id="username"
+            placeholder="Enter Email"
+        >
+
+
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter Password"
+        >
+
+
+
+        <select id="roleSelect">
+
+            <option value="customer">
+                Customer
+            </option>
+
+            <option value="admin">
+                Admin
+            </option>
+
+        </select>
+
+
+
+        <button onclick="login()">
+            Login / Signup
+        </button>
+
+
+
+        <p id="loginMessage"></p>
+
+    </div>
+
+
+
+    <script type="module">
+
+        import { initializeApp }
+
+        from
+        "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+
+
+
+        import {
+
+            getAuth,
+
+            signInWithEmailAndPassword,
+
+            createUserWithEmailAndPassword
+
+        }
+
+        from
+        "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+
+
+        const firebaseConfig = {
+
+            apiKey:
+            "AIzaSyC7lF5GST9b6UHzj7NC8uO8SET8TwSUt-Y",
+
+            authDomain:
+            "apex-global-logistics-company.firebaseapp.com",
+
+            projectId:
+            "apex-global-logistics-company",
+
+            storageBucket:
+            "apex-global-logistics-company.firebasestorage.app",
+
+            messagingSenderId:
+            "1090302812907",
+
+            appId:
+            "1:1090302812907:web:e31667aee6e9a76a63d4ae"
+
+        };
+
+
+
+        const app = initializeApp(firebaseConfig);
+
+        const auth = getAuth(app);
+
+
+
+        window.login = async function () {
+
+            let email =
+
+                document.getElementById(
+                    "username"
+                ).value;
+
+
+
+            let password =
+
+                document.getElementById(
+                    "password"
+                ).value;
+
+
+
+            let role =
+
+                document.getElementById(
+                    "roleSelect"
+                ).value;
+
+
+
+            if (
+                email === "" ||
+                password === ""
+            ) {
+
+                alert("Please fill all fields");
+
+                return;
+
+            }
+
+
+
+            try {
+
+                await signInWithEmailAndPassword(
+
+                    auth,
+
+                    email,
+
+                    password
+
+                );
+
+
+
+                sessionStorage.setItem(
+                    "loggedIn",
+                    "true"
+                );
+
+
+
+                sessionStorage.setItem(
+                    "userRole",
+                    role
+                );
+
+
+
+                window.location.href =
+                    "dashboard.html";
+
+            }
+
+            catch (error) {
+
+                try {
+
+                    await createUserWithEmailAndPassword(
+
+                        auth,
+
+                        email,
+
+                        password
+
+                    );
+
+
+
+                    sessionStorage.setItem(
+                        "loggedIn",
+                        "true"
+                    );
+
+
+
+                    sessionStorage.setItem(
+                        "userRole",
+                        role
+                    );
+
+
+
+                    window.location.href =
+                        "dashboard.html";
+
+                }
+
+                catch (signupError) {
+
+                    alert(signupError.message);
+
+                }
+
+            }
+
+        };
+
+    </script>
+
+</body>
+
+</html>

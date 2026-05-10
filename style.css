@@ -1,0 +1,285 @@
+body {
+    font-family: Arial;
+    background: linear-gradient(to right, #dfe9f3, #ffffff);
+    text-align: center;
+    padding-top: 80px;
+}
+
+.container {
+    background: white;
+    width: 400px;
+    margin: auto;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: gray;
+    margin-bottom: 25px;
+}
+
+input {
+    padding: 12px;
+    width: 280px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+button {
+    padding: 12px 25px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+#result {
+    margin-top: 25px;
+    font-size: 18px;
+    font-weight: bold;
+} 
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+button:hover {
+    transform: scale(1.05);
+    transition: 0.3s;
+}
+input:focus {
+    outline: none;
+    border: 2px solid #007bff;
+    box-shadow: 0 0 10px rgba(0,123,255,0.5);
+}
+footer{
+    margin-top: 30px;
+    color: gray;
+    font-size: 14px;
+}
+@media (max-width: 600px) {
+
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    input {
+        width: 90%;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+}
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background: black;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+
+#progressBar {
+    height: 100%;
+    width: 0%;
+    background: limegreen;
+    transition: width 0.5s ease;
+}
+button:hover {
+    background: #0056cc;
+    transform: scale(1.05);
+}
+
+button {
+    transition: 0.3s;
+}
+#result {
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.dark-mode {
+    background: #121212;
+    color: white;
+}
+
+.dark-mode .container {
+    background: #1e1e1e;
+    color: white;
+}
+
+.dark-mode input {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+}
+
+.dark-mode button {
+    background: #444;
+}
+
+.dark-mode .progress-container {
+    background: #555;
+}
+.status-box {
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.processing {
+    background: purple;
+}
+
+.shipping {
+    background: blue;
+}
+
+.delivery {
+    background: darkorange;
+}
+
+.delivered {
+    background: green;
+}
+
+.error {
+    background: red;
+}
+.loader {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+    display: none;
+}
+
+@keyframes spin {
+
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+}
+.map-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f0f4ff;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.map-section h3 {
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.map-section p {
+    margin: 8px 0;
+    font-weight: bold;
+}
+#notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: none;
+    z-index: 1000;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+.stats-container {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin: 20px 0;
+
+    flex-wrap: wrap;
+
+}
+
+
+
+.stat-card {
+
+    flex: 1;
+
+    min-width: 150px;
+
+    background: #007bff;
+
+    color: white;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    text-align: center;
+
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+
+}
+
+
+
+.stat-card h3 {
+
+    font-size: 30px;
+
+    margin-bottom: 10px;
+
+}

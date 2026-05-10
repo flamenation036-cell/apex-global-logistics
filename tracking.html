@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+  <title>Track Shipment</title>
+
+  <style>
+
+    body{
+      background:#0f172a;
+      font-family:Arial;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      margin:0;
+      color:white;
+    }
+
+    .container{
+      background:#1e293b;
+      padding:30px;
+      width:400px;
+      border-radius:12px;
+      text-align:center;
+    }
+
+    input{
+      width:100%;
+      padding:14px;
+      margin-top:15px;
+      border:none;
+      border-radius:8px;
+      background:#334155;
+      color:white;
+      font-size:16px;
+    }
+
+    button{
+      margin-top:20px;
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:8px;
+      background:#2563eb;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#1d4ed8;
+    }
+
+    #result{
+      margin-top:25px;
+      text-align:left;
+      background:#334155;
+      padding:15px;
+      border-radius:10px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>Apex Global Logistics</h1>
+
+    <h3>Track Shipment</h3>
+
+    <input
+      type="text"
+      id="trackingInput"
+      placeholder="Enter Tracking ID">
+
+    <button onclick="trackShipment()">
+      Track Shipment
+    </button>
+
+    <div id="result"></div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="./tracking.js"></script>
+
+</body>
+</html>
