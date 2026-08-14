@@ -88,48 +88,55 @@ async function loadShipments() {
 }
 
 
-
 window.addShipment = async function () {
 
-  const trackingId =
-    document.getElementById("trackingId").value;
+  try {
 
-  const customerName =
-    document.getElementById("customerName").value;
+    const trackingId =
+      document.getElementById("trackingId").value.trim();
 
-  const currentLocation =
-    document.getElementById("currentLocation").value;
+    const customerName =
+      document.getElementById("customerName").value.trim();
 
-  const shipmentStatus =
-    document.getElementById("shipmentStatus").value;
+    const currentLocation =
+      document.getElementById("currentLocation").value.trim();
 
-  const progress =
-    document.getElementById("progress").value;
+    const shipmentStatus =
+      document.getElementById("shipmentStatus").value.trim();
 
+    const progress =
+      document.getElementById("progress").value;
 
+    if (!trackingId || !customerName || !currentLocation || !shipmentStatus || progress === "") {
+      alert("Please fill in all shipment fields.");
+      return;
+    }
 
-  await setDoc(doc(db, "shipments", trackingId), {
+    await setDoc(doc(db, "shipments", trackingId), {
 
-    customerName,
+      customerName: customerName,
+      currentLocation: currentLocation,
+      shipmentStatus: shipmentStatus,
+      progress: Number(progress)
 
-    currentLocation,
+    });
 
-    shipmentStatus,
+    alert("Shipment Added Successfully!");
 
-    progress
+    document.getElementById("trackingId").value = "";
+    document.getElementById("customerName").value = "";
+    document.getElementById("currentLocation").value = "";
+    document.getElementById("shipmentStatus").value = "";
+    document.getElementById("progress").value = "";
 
-  });
+    await loadShipments();
 
+  } catch (error) {
 
+    console.error("Error adding shipment:", error);
 
-  alert("Shipment Added Successfully");
+    alert("Shipment could not be added. Check the browser console for the error.");
 
-
-
-  loadShipments();
+  }
 
 };
-
-
-
-loadShipments();
