@@ -44,46 +44,174 @@ const shipmentList =
 
 async function loadShipments() {
 
+  const shipmentList =
+    document.getElementById("shipmentList");
+
+  const totalElement =
+    document.getElementById("totalShipments");
+
+  const transitElement =
+    document.getElementById("transitShipments");
+
+  const deliveredElement =
+    document.getElementById("deliveredShipments");
+
+
   shipmentList.innerHTML = "";
 
 
+  try {
 
-  const querySnapshot =
-    await getDocs(collection(db, "shipments"));
-
-
-
-  querySnapshot.forEach((docItem) => {
-
-    const data = docItem.data();
+    const querySnapshot =
+      await getDocs(
+        collection(db, "shipments")
+      );
 
 
+    let total = 0;
+    let transit = 0;
+    let delivered = 0;
 
-    shipmentList.innerHTML += `
 
+    querySnapshot.forEach((docItem) => {
+
+      const data =
+        docItem.data();
+
+
+      total++;
+
+
+      const status =
+        (data.shipmentStatus || "")
+        .toLowerCase();
+
+
+      if (status.includes("transit")) {
+
+        transit++;
+
+      }
+
+
+      if (status.includes("deliver")) {
+
+        delivered++;
+
+      }
+
+
+      const progress =
+        Number(data.progress) || 0;
+
+
+      shipmentList.innerHTML += `
+
+        <div style="
+          background:#1e293b;
+          padding:20px;
+          margin-top:15px;
+          border-radius:15px;
+          border:1px solid #334155;
+        ">
+
+          <h3 style="
+            color:#38bdf8;
+            margin-top:0;
+          ">
+
+            ${docItem.id}
+
+          </h3>
+
+
+          <p>
+            <strong>Customer:</strong>
+            ${data.customerName || "N/A"}
+          </p>
+
+
+          <p>
+            <strong>Location:</strong>
+            ${data.currentLocation || "N/A"}
+          </p>
+
+
+          <p>
+            <strong>Status:</strong>
+            ${data.shipmentStatus || "Pending"}
+          </p>
+
+
+          <p>
+            <strong>Progress:</strong>
+            ${progress}%
+          </p>
+
+
+          <div style="
+            width:100%;
+            height:10px;
+            background:#334155;
+            border-radius:20px;
+            overflow:hidden;
+            margin-top:10px;
+          ">
+
+            <div style="
+              width:${Math.min(progress,100)}%;
+              height:100%;
+              background:#22c55e;
+              border-radius:20px;
+            "></div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    });
+
+
+    totalElement.textContent = total;
+
+    transitElement.textContent = transit;
+
+    deliveredElement.textContent = delivered;
+
+
+    if (total === 0) {
+
+      shipmentList.innerHTML = `
+        <div class="empty-message">
+          No shipments found.
+        </div>
+      `;
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Error loading shipments:",
+      error
+    );
+
+
+    shipmentList.innerHTML = `
       <div style="
-        background:white;
-        color:black;
+        color:#fca5a5;
+        background:#450a0a;
         padding:15px;
-        margin-top:15px;
         border-radius:10px;
       ">
-
-        <h3>${docItem.id}</h3>
-
-        <p><b>Customer:</b> ${data.customerName}</p>
-
-        <p><b>Location:</b> ${data.currentLocation}</p>
-
-        <p><b>Status:</b> ${data.shipmentStatus}</p>
-
-        <p><b>Progress:</b> ${data.progress}%</p>
-
+        Unable to load shipments.
       </div>
-
     `;
 
-  });
+  }
 
 }
 
@@ -140,3 +268,4 @@ window.addShipment = async function () {
   }
 
 };
+loadShipments();
