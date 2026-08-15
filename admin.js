@@ -4,6 +4,7 @@ import {
   getFirestore,
   doc,
   setDoc,
+  deleteDoc,
   collection,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -78,7 +79,6 @@ async function loadShipments() {
       const data =
         docItem.data();
 
-
       total++;
 
 
@@ -88,16 +88,12 @@ async function loadShipments() {
 
 
       if (status.includes("transit")) {
-
         transit++;
-
       }
 
 
       if (status.includes("deliver")) {
-
         delivered++;
-
       }
 
 
@@ -119,9 +115,7 @@ async function loadShipments() {
             color:#38bdf8;
             margin-top:0;
           ">
-
             ${docItem.id}
-
           </h3>
 
 
@@ -164,6 +158,38 @@ async function loadShipments() {
               background:#22c55e;
               border-radius:20px;
             "></div>
+
+          </div>
+
+
+          <div style="
+            display:flex;
+            gap:10px;
+            margin-top:18px;
+          ">
+
+            <button
+              onclick="editShipment('${docItem.id}')"
+              style="
+                margin-top:0;
+                background:#2563eb;
+                flex:1;
+              "
+            >
+              ✏️ Edit
+            </button>
+
+
+            <button
+              onclick="deleteShipment('${docItem.id}')"
+              style="
+                margin-top:0;
+                background:#dc2626;
+                flex:1;
+              "
+            >
+              🗑️ Delete
+            </button>
 
           </div>
 
@@ -221,51 +247,286 @@ window.addShipment = async function () {
   try {
 
     const trackingId =
-      document.getElementById("trackingId").value.trim();
+      document.getElementById("trackingId")
+        .value.trim();
 
     const customerName =
-      document.getElementById("customerName").value.trim();
+      document.getElementById("customerName")
+        .value.trim();
 
     const currentLocation =
-      document.getElementById("currentLocation").value.trim();
+      document.getElementById("currentLocation")
+        .value.trim();
 
     const shipmentStatus =
-      document.getElementById("shipmentStatus").value.trim();
+      document.getElementById("shipmentStatus")
+        .value.trim();
 
     const progress =
-      document.getElementById("progress").value;
+      document.getElementById("progress")
+        .value;
 
-    if (!trackingId || !customerName || !currentLocation || !shipmentStatus || progress === "") {
-      alert("Please fill in all shipment fields.");
+
+    if (
+      !trackingId ||
+      !customerName ||
+      !currentLocation ||
+      !shipmentStatus ||
+      progress === ""
+    ) {
+
+      alert(
+        "Please fill in all shipment fields."
+      );
+
       return;
+
     }
 
-    await setDoc(doc(db, "shipments", trackingId), {
 
-      customerName: customerName,
-      currentLocation: currentLocation,
-      shipmentStatus: shipmentStatus,
-      progress: Number(progress)
+    const editingTrackingId =
+      window.editingTrackingId;
 
-    });
 
-    alert("Shipment Added Successfully!");
+    if (editingTrackingId) {
 
-    document.getElementById("trackingId").value = "";
-    document.getElementById("customerName").value = "";
-    document.getElementById("currentLocation").value = "";
-    document.getElementById("shipmentStatus").value = "";
-    document.getElementById("progress").value = "";
+      /*
+        UPDATE EXISTING SHIPMENT
+      */
+
+      await setDoc(
+        doc(
+          db,
+          "shipments",
+          editingTrackingId
+        ),
+        {
+
+          customerName:
+            customerName,
+
+          currentLocation:
+            currentLocation,
+
+          shipmentStatus:
+            shipmentStatus,
+
+          progress:
+            Number(progress)
+
+        }
+      );
+
+
+      alert(
+        "Shipment updated successfully!"
+      );
+
+
+      window.editingTrackingId =
+        null;
+
+
+    } else {
+
+      /*
+        CREATE NEW SHIPMENT
+      */
+
+      await setDoc(
+        doc(
+          db,
+          "shipments",
+          trackingId
+        ),
+        {
+
+          customerName:
+            customerName,
+
+          currentLocation:
+            currentLocation,
+
+          shipmentStatus:
+            shipmentStatus,
+
+          progress:
+            Number(progress)
+
+        }
+      );
+
+
+      alert(
+        "Shipment added successfully!"
+      );
+
+    }
+
+
+    /*
+      CLEAR FORM
+    */
+
+    document.getElementById(
+      "trackingId"
+    ).value = "";
+
+    document.getElementById(
+      "customerName"
+    ).value = "";
+
+    document.getElementById(
+      "currentLocation"
+    ).value = "";
+
+    document.getElementById(
+      "shipmentStatus"
+    ).value = "";
+
+    document.getElementById(
+      "progress"
+    ).value = "";
+
+
+    /*
+      RELOAD SHIPMENTS
+    */
 
     await loadShipments();
 
+
   } catch (error) {
 
-    console.error("Error adding shipment:", error);
+    console.error(
+      "Error saving shipment:",
+      error
+    );
 
-    alert("Shipment could not be added. Check the browser console for the error.");
+    alert(
+      "Shipment could not be saved. Check the browser console."
+    );
 
   }
 
 };
 loadShipments();
+window.deleteShipment = async function (trackingId) {
+
+  const confirmed =
+    confirm(
+      `Are you sure you want to delete shipment ${trackingId}?`
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    await deleteDoc(
+      doc(db, "shipments", trackingId)
+    );
+
+
+    alert(
+      "Shipment deleted successfully."
+    );
+
+
+    await loadShipments();
+
+
+  } catch (error) {
+
+    console.error(
+      "Error deleting shipment:",
+      error
+    );
+
+
+    alert(
+      "Unable to delete shipment."
+    );
+
+  }
+
+};
+window.editShipment = async function (trackingId) {
+
+  try {
+
+    const shipmentRef =
+      doc(db, "shipments", trackingId);
+
+    const shipment =
+      await getDocs(
+        collection(db, "shipments")
+      );
+
+    let shipmentData = null;
+
+    shipment.forEach((item) => {
+
+      if (item.id === trackingId) {
+        shipmentData = item.data();
+      }
+
+    });
+
+
+    if (!shipmentData) {
+
+      alert("Shipment could not be found.");
+
+      return;
+
+    }
+
+
+    document.getElementById("trackingId").value =
+      trackingId;
+
+    document.getElementById("customerName").value =
+      shipmentData.customerName || "";
+
+    document.getElementById("currentLocation").value =
+      shipmentData.currentLocation || "";
+
+    document.getElementById("shipmentStatus").value =
+      shipmentData.shipmentStatus || "";
+
+    document.getElementById("progress").value =
+      shipmentData.progress || 0;
+
+
+    window.editingTrackingId = trackingId;
+
+
+    alert(
+      "Shipment loaded into the form. Make your changes, then save it."
+    );
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "Error loading shipment for editing:",
+      error
+    );
+
+    alert(
+      "Unable to load shipment for editing."
+    );
+
+  }
+
+};
